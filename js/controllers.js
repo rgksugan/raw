@@ -4,7 +4,7 @@
 
 angular.module('raw.controllers', [])
 
-  .controller('RawCtrl', function ($scope, dataService) {
+  .controller('RawCtrl', function ($scope, dataService, $http) {
 
     $scope.samples = [
       { title : 'Cars (multivariate)', url : 'data/multivariate.csv' },
@@ -13,12 +13,16 @@ angular.module('raw.controllers', [])
       { title : 'Cocktails (correlations)', url : 'data/correlations.csv' }
     ]
 
+    $scope.selectFile = function () {
+      console.log(arguments);
+    };
+
     $scope.$watch('sample', function (sample){
       if (!sample) return;
       dataService.loadSample(sample.url).then(
         function(data){
           $scope.text = data;
-        }, 
+        },
         function(error){
           $scope.error = error;
         }
@@ -45,8 +49,21 @@ angular.module('raw.controllers', [])
 
       try {
         var parser = raw.parser();
-        $scope.data = parser(text);
-        $scope.metadata = parser.metadata(text);
+        // $scope.data = parser(text);
+        $http.get('../data/plan.json').then(function (response) {
+          $scope.data = response.data;
+          $scope.metadata = parser.metadata(text);
+          $scope.metadata = [{
+            key: "width",
+            type: "Number"
+          }, {
+            key: "height",
+            type: "Number"
+          }, {
+            key: "type",
+            type: "String"
+          }];
+        });
         $scope.error = false;
       } catch(e){
         $scope.data = [];

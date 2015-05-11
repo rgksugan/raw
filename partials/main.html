@@ -1,9 +1,8 @@
 <div class="wrapper">
 
-	<section class="">
+	<section>
 
 		<div class="container">
-
 			<h3 id="data">Insert your data
 				<button type="button"
 				class="choose btn btn-default"
@@ -28,6 +27,7 @@
 		<div data-ng-show="dataView != 'table'">
 			<textarea ui-codemirror="codeMirrorOptions" ng-model="text">
 			</textarea>
+			<input type="file" ng-change="selectFile" ng-model="selectedFile" />
 		</div>
 
 		<div raw-table class="data-table" data-ng-show="dataView == 'table'"></div>
